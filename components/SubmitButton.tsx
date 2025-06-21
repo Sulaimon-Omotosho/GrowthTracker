@@ -17,7 +17,10 @@ const SubmitButton = ({ isLoading, className, children }: ButtonProps) => {
     <Button
       type='submit'
       disabled={pending || isLoading}
-      className={className ?? 'bg-green-600 text-white w-full'}
+      className={
+        className ??
+        'bg-green-600 text-white w-full hover:bg-green-300 hover:cursor-pointer'
+      }
     >
       {pending || isLoading ? (
         <div className='flex items-center gap-4'>
