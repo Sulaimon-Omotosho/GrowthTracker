@@ -72,7 +72,7 @@ const LoginForm = () => {
       </h1>
       <Form {...form}>
         <form
-          // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           className='space-y-6 flex-1 bg-transparent'
         >
           <div className='relative'>
@@ -106,11 +106,11 @@ const LoginForm = () => {
             <div className=''>
               <SubmitButton>Sign Up</SubmitButton>
               <p className='text-sm pt-2'>
-                Have An Account?{' '}
+                Have An Account?
                 <span
-                  // onClick={() => {
-                  //   setSignUp(!signUp)
-                  // }}
+                  onClick={() => {
+                    setSignUp(!signUp)
+                  }}
                   className='underline text-blue-500 hover:text-blue-800 pl-2 cursor-pointer'
                 >
                   Login
@@ -123,9 +123,9 @@ const LoginForm = () => {
               <p className='text-sm pt-2'>
                 No Account?{' '}
                 <span
-                  // onClick={() => {
-                  //   setSignUp(!signUp)
-                  // }}
+                  onClick={() => {
+                    setSignUp(!signUp)
+                  }}
                   className='underline text-blue-500 hover:text-blue-800 pl-2 cursor-pointer'
                 >
                   Sign Up
