@@ -12,8 +12,8 @@ const images = [
 
 const BottomBar = () => {
   return (
-    <div className='flex items-center justify-between p-4 h-24 overflow-hidden whitespace-nowrap mx-96'>
-      <div className='flex animate-scroll items-center gap-16'>
+    <div className='flex items-center justify-between p-4 h-24 overflow-hidden whitespace-nowrap mx-5 xl:mx-96 lg:mx-40 md:mx-10'>
+      <div className='flex animate-scroll items-center gap-8 md:gap-16'>
         {images.map((src, i) => (
           <div className='flex-shrink-0 size-20 relative' key={i}>
             <Image
