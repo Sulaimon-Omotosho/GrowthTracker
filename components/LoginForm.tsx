@@ -3,14 +3,14 @@
 import React, { useState } from 'react'
 import SubmitButton from './SubmitButton'
 import CustomFormField, { FormFieldType } from './CustomFormField'
-// import { FormFieldType } from '../types/index'
 import { useRouter } from 'next/navigation'
 import { Form } from './ui/form'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserFormValidation } from '@/lib/validation'
-import { signUpWithEmail } from '@/lib/auth'
+import { signUpWithEmail } from '@/lib/actions/auth'
+import { signIn } from 'next-auth/react'
 
 const LoginForm = () => {
   const router = useRouter()
@@ -49,10 +49,25 @@ const LoginForm = () => {
 
     const res = await signUpWithEmail(formData)
 
-    // if (res.error) {
-    //  setError(res.error)
-    //  return
-    // }
+    if (res.error) {
+      setError(res.error)
+      return
+    }
+
+    const signInRes = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: `/`,
+    })
+
+    if (signInRes?.error) {
+      setError(signInRes.error)
+    } else {
+      router.push(signInRes?.url || '/')
+    }
+
+    // const userId = res?.user?.id
   }
 
   // USER LOG IN

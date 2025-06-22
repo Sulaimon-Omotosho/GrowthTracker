@@ -4,10 +4,10 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 import BottomBar from '@/components/BottomBar'
 
-const fontSans = Plus_Jakarta_Sans({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-sans',
+  // variable: '--font-sans',
 })
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={cn('min-h-screen font-sans antialiased', fontSans.variable)}
+        className={cn('min-h-screen font-sans antialiased', jakarta.className)}
       >
         {children}
         <BottomBar />

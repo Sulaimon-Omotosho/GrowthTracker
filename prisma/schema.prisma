@@ -1,0 +1,326 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  DISTRICT
+  COMMUNITY
+  ZONAL
+  CELL
+  LEADER
+  USER
+}
+
+enum PostType {
+  WEEKLY_REPORT
+  TESTIMONY
+  ANNOUNCEMENT
+  EVENT
+}
+
+enum Scope {
+  GENERAL
+  DISTRICT
+  COMMUNITY
+}
+
+type Address {
+  street String
+  city   String
+  state  String
+  zip    String
+}
+
+enum TargetUnit {
+  CELL
+  ZONE
+  DISTRICT
+  DEPARTMENT
+  COMMUNITY
+  TEAM
+}
+
+model Post {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  slug     String    @unique
+  title    String
+  body     String
+  author   User      @relation(fields: [authorId], references: [id])
+  authorId String    @db.ObjectId
+  comments Comment[]
+  
+  weekStart  DateTime? 
+  tags  String[] 
+  type  PostType  @default(WEEKLY_REPORT) 
+
+  targetType TargetUnit[]
+
+  // cell    Cell?   @relation("PostToCell", fields: [cellId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  // cellId  String?   @db.ObjectId
+}
+
+model Comment {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  comment String
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  String @db.ObjectId
+}
+  
+model User {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  firstName          String?
+  lastName          String?
+  email         String?         @unique
+  userName         String?         @unique
+  phone         String?         
+  hashedPassword String?
+  emailVerified DateTime?
+  birthDate DateTime?
+  image         String?
+  gender         String?
+  address         String?
+  addressType         Address?
+  occupation         String?
+  maritalStatus         String?
+  newConvert         String?
+  formerReligion         String?
+  notes         String?
+  privacyConsent         Boolean?
+  contactConsent         Boolean?
+  disclosureConsent         Boolean?
+
+  accounts      Account[]
+  sessions      Session[]
+
+  departmentId String? @db.ObjectId
+  department Department? @relation("Department", fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cellId    String? @db.ObjectId
+  cell          Cell?       @relation("MembersToCell", fields: [cellId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  role      UserRole? @default(USER)
+
+  districtPastor District? @relation("DistrictPastor")
+  communityPastor Community? @relation("CommunityPastor")
+  zonalLeader Zone? @relation("ZonalLeader")
+  cellLeader Cell? @relation("CellLeader")
+  TeamPastor Team? @relation("TeamPastor")
+  hod Department? @relation("HOD")
+
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Posts Post[]
+}
+
+model District {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  campus String @default("Gbagada")
+  communities Community[]
+  
+  pastorId String? @db.ObjectId @unique
+  pastor User? @relation("DistrictPastor", fields: [pastorId], references: [id])
+
+  posts  TargetUnit[]
+
+  Announcement Announcement[]
+  Event Event[]
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Community {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  districtId String @db.ObjectId
+  district District @relation(fields: [districtId], references: [id])
+  zones Zone[] @relation("ZonesToCells")
+
+  pastorId String? @db.ObjectId @unique
+  pastor User? @relation("CommunityPastor", fields: [pastorId], references: [id])
+
+  posts  TargetUnit[]
+
+  Event Event[]
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Zone {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  communityId String @db.ObjectId
+  community Community @relation("ZonesToCells", fields: [communityId], references: [id])
+  cell Cell[] @relation("CellsToZone")
+  
+  leaderId String? @db.ObjectId @unique
+  leader User? @relation("ZonalLeader", fields: [leaderId], references: [id])
+
+  posts  TargetUnit[]
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cell {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  address String?
+  addressType Address?
+  zoneId String @db.ObjectId
+  zone Zone @relation("CellsToZone", fields: [zoneId], references: [id])
+  members User[] @relation("MembersToCell")
+  // posts Post[] @relation("PostToCell")
+  
+  leaderId String? @db.ObjectId @unique
+  leader User? @relation("CellLeader", fields: [leaderId], references: [id])
+
+  posts  TargetUnit[]
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Team {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  desc  String?
+
+  pastorId String? @db.ObjectId @unique
+  pastor User? @relation("TeamPastor", fields: [pastorId], references: [id])
+  departments Department[] @relation("Team")
+
+  posts  TargetUnit[]
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Department {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  desc  String?
+
+  members User[] @relation("Department")
+  hodId String? @db.ObjectId @unique
+  hod User? @relation("HOD", fields: [hodId], references: [id])
+  teamId String? @db.ObjectId
+  team Team? @relation("Team", fields: [teamId], references: [id])
+
+  posts  TargetUnit[]
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  from  String
+  desc  String
+  img   String?
+
+  scope   Scope    @default(GENERAL)
+  districtId String? @db.ObjectId
+  district   District? @relation(fields: [districtId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  from  String
+  desc  String
+  img   String?
+  date  DateTime
+  startTime   DateTime
+  endTime   DateTime
+
+  scope      Scope    @default(GENERAL)
+  districtId String?  @db.ObjectId
+  communityId String? @db.ObjectId
+
+  district   District?  @relation(fields: [districtId], references: [id])
+  community  Community? @relation(fields: [communityId], references: [id])
+   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @id @map("_id")
+  userId               String  @db.ObjectId
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([userId, credentialID])
+}
+ 
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+}
+ 
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+}

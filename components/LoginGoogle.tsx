@@ -1,11 +1,18 @@
+'use client'
+
 import React from 'react'
 import { Button } from './ui/button'
 import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 
 const LoginGoogle = () => {
+  const handleLogin = async () => {
+    await signIn('google', { callbackUrl: '/' })
+  }
+
   return (
     <Button
-      // onClick={handleLogin}
+      onClick={handleLogin}
       className='flex gap-4 p-4 ring-1 ring-orange-400 dark:ring-orange-200 rounded-md w-full hover:cursor-pointer'
     >
       <Image

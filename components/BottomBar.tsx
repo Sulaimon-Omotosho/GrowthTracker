@@ -19,7 +19,7 @@ const BottomBar = () => {
             <Image
               src={src}
               alt={`carousel-${i}`}
-              layout='fill'
+              fill
               objectFit='cover'
               className='rounded-lg'
             />
