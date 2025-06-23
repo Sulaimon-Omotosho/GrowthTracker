@@ -35,6 +35,10 @@ enum Scope {
   GENERAL
   DISTRICT
   COMMUNITY
+  ZONE
+  CELL
+  TEAM
+  DEPARTMENT
 }
 
 type Address {
@@ -66,7 +70,8 @@ model Post {
   tags  String[] 
   type  PostType  @default(WEEKLY_REPORT) 
 
-  targetType TargetUnit[]
+  scope Scope
+  scopeId String? @db.ObjectId
 
   // cell    Cell?   @relation("PostToCell", fields: [cellId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   // cellId  String?   @db.ObjectId
@@ -85,7 +90,7 @@ model User {
   firstName          String?
   lastName          String?
   email         String?         @unique
-  userName         String?         @unique
+  // userName         String?         @unique
   phone         String?         
   hashedPassword String?
   emailVerified DateTime?

@@ -1,11 +1,14 @@
-import NextAuth, { Session, User } from 'next-auth'
-import { JWT } from 'next-auth/jwt'
+import db from '@/prisma/db'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
-import { NextRequest } from 'next/server'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { saltAndHashPassword } from '@/utils/helper'
 
-function getAuthOptions(req: NextRequest) {
-  let providers = [
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db) as any,
+
+  providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -21,56 +24,85 @@ function getAuthOptions(req: NextRequest) {
           return null
         }
 
-        const res = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { 'Content-Type': 'application/json' },
-        })
+        const email = credentials.email as string
+        const hash = await saltAndHashPassword(credentials.password)
 
-        const user = await res.json()
+        let user = (await db.user.findUnique({ where: { email } })) as any
 
-        if (res.ok && user) return user
-        return null
+        if (!user) {
+          const newUser = await db.user.create({
+            data: {
+              email,
+              hashedPassword: hash as any,
+              role: 'USER',
+            },
+          })
+
+          return { newUser }
+        } else {
+          const bcrypt = require('bcrypt')
+
+          const isMatch = await bcrypt.compare(
+            credentials.password as string,
+            user?.hashedPassword as string
+          )
+          if (!isMatch) {
+            throw new Error('Incorrect Password')
+          }
+        }
+
+        // if (!user.hashedPassword) {
+        //   throw new Error('User account not set up for password login.')
+        // }
+
+        return {
+          ...user,
+          role: user.role ?? 'USER',
+        }
+        // return user
       },
     }),
 
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: 'USER',
+          address: null,
+        }
+      },
     }),
-  ]
+  ],
 
-  const isSigninPage =
-    req.method === 'GET' && req.nextUrl.pathname.includes('/api/auth/signin')
+  secret: process.env.NEXTAUTH_SECRET,
 
-  if (isSigninPage) {
-    providers = providers.filter((p) => p.name !== 'Google')
-  }
+  session: {
+    strategy: 'jwt',
+  },
 
-  return {
-    providers,
-    // pages: {
-    //   signIn: '/custom-signin',
-    // },
-    session: {
-      strategy: 'jwt',
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+        token.role = (user as any).role
+        // token.address = (user as any).address
+      }
+      return token
     },
-    callbacks: {
-      async jwt({ token, user }: { token: JWT; user?: User }) {
-        if (user) token.user = user
-        return token
-      },
-      async session({ session, token }: { token: JWT; session?: Session }) {
-        session!.user = token.user as Session['user']
-        return session
-      },
+    async session({ session, token }) {
+      session.user!.id = token.id
+      session.user!.role = token.role
+      return session
     },
-  }
+  },
 }
 
-const handler = async (req: NextRequest, ctx: any) => {
-  return NextAuth(getAuthOptions(req) as any)(req, ctx)
-}
+// export default NextAuth(authOptions)
+const handler = NextAuth(authOptions)
 
-export const GET = handler
-export const POST = handler
+export { handler as GET, handler as POST }

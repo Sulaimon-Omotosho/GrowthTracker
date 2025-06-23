@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserFormValidation } from '@/lib/validation'
-import { signUpWithEmail } from '@/lib/actions/auth'
+import { getUserByEmail, signUpWithEmail } from '@/lib/actions/auth'
 import { signIn } from 'next-auth/react'
 
 const LoginForm = () => {
@@ -45,7 +45,7 @@ const LoginForm = () => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     const email = formData.get('email') as string
-    const password = formData.get('password') as string
+    const password = formData.get('password') as any
 
     const res = await signUpWithEmail(formData)
 
@@ -58,7 +58,7 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
-      callbackUrl: `/`,
+      callbackUrl: `/redirect`,
     })
 
     if (signInRes?.error) {
@@ -76,6 +76,27 @@ const LoginForm = () => {
     const formData = new FormData(e.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+
+    const existingUser = await getUserByEmail(email)
+    if (!existingUser) {
+      setError('User not found')
+      return
+    }
+
+    const role = existingUser.role?.toLowerCase()
+
+    const res = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: `/redirect`,
+    })
+
+    if (res?.error) {
+      setError(res.error)
+    } else {
+      router.push(res?.url || '/redirect')
+    }
   }
 
   const handleSubmit = signUp ? signUpUser : loginUser

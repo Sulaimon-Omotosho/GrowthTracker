@@ -34,3 +34,38 @@
 //     weekStart: new Date('2025-06-02'),
 //   },
 // })
+
+//  Example Logic When Creating a Post
+// ts
+// Copy
+// Edit
+// const postData = {
+//   slug: 'weekly-report-1',
+//   title: 'Cell Weekly Report',
+//   body: 'This week we did...',
+//   authorId: 'userObjectId',
+//   scope: 'CELL',
+//   scopeId: 'cellObjectIdFromFrontendForm',
+// }
+// await prisma.post.create({ data: postData })
+
+//  When Querying Posts
+// You'll need to dynamically resolve the scope like:
+
+// ts
+// Copy
+// Edit
+// const posts = await prisma.post.findMany({
+//   where: {
+//     scope: 'CELL',
+//     scopeId: '65b9...abc'
+//   },
+// })
+// Or, to fetch the related entity (you'll need custom logic):
+
+// ts
+// Copy
+// Edit
+// if (post.scope === 'CELL') {
+//   const cell = await prisma.cell.findUnique({ where: { id: post.scopeId } })
+// }
