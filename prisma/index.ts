@@ -1,6 +1,7 @@
 'use server'
 
-import { PrismaClient } from '@/generated/prisma/client'
+import { PrismaClient } from '@prisma/client/'
+// import { PrismaClient } from '@/generated/prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -11,7 +12,6 @@ async function main() {
       firstName: FormData.name,
       lastName: FormData.name,
       email: FormData.name,
-      userName: FormData.name,
       phone: FormData.name,
       hashedPassword: FormData.name,
       birthDate: FormData.name,
