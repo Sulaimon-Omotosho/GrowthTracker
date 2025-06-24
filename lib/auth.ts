@@ -4,7 +4,6 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import type { NextAuthOptions } from 'next-auth'
 import db from '@/prisma/db'
 import { saltAndHashPassword } from '@/utils/helper'
-// import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as any,
@@ -65,7 +64,23 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
+  secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      if (account?.provider === 'google') {
+        const prismaUser = await db.user.findUnique({
+          where: { email: user.email! },
+          select: { hashedPassword: true },
+        })
+
+        if (prismaUser && !prismaUser.hashedPassword) {
+          return `/updatePassword?email=${user.email}`
+        }
+      }
+      return true
+    },
+
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
@@ -73,13 +88,13 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
+
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as any
+      if (session.user && token) {
+        session.user.id = token.id
+        session.user.role = token.role
       }
       return session
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
 }

@@ -2,9 +2,10 @@
 
 import db from '@/prisma/db'
 import { saltAndHashPassword } from '@/utils/helper'
-import AuthError from 'next-auth'
+import AuthError, { getServerSession } from 'next-auth'
 import { signIn } from 'next-auth/react'
 import { revalidatePath } from 'next/cache'
+import { authOptions } from '../auth'
 
 // GET USER BY EMAIL
 export const getUserByEmail = async (email: string) => {
@@ -30,7 +31,6 @@ export const signUpWithEmail = async (formData: FormData) => {
   if (existingUser) {
     return { error: 'User already exists' }
   }
-  console.log('form data', formData)
 
   try {
     const hash = await saltAndHashPassword(password)
@@ -68,7 +68,7 @@ export const loginWithEmail = async (formData: FormData) => {
     email,
     password,
     role: existingUser.role,
-    redirectTo: '/redirect',
+    redirectTo: '/admin',
   }
 
   try {
@@ -84,5 +84,33 @@ export const loginWithEmail = async (formData: FormData) => {
     }
     throw error
   }
-  revalidatePath('/redirect')
+  revalidatePath('/admin')
+}
+
+// UPDATE PASSWORD
+export async function updatePassword(formData: FormData) {
+  // console.log('Data', formData)
+
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  const hash = await saltAndHashPassword(password as any)
+  // console.log('Email', email)
+  // console.log('Hash', hash)
+
+  try {
+    await db.user.update({
+      where: {
+        email: email,
+      },
+      data: {
+        hashedPassword: hash,
+      },
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Password update failed:', error)
+    return { success: false, error: true }
+  }
 }

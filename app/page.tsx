@@ -1,3 +1,4 @@
+import BottomBar from '@/components/BottomBar'
 import LoginForm from '@/components/LoginForm'
 import LoginGoogle from '@/components/LoginGoogle'
 import LogoutButton from '@/components/LogoutButton'
@@ -6,10 +7,9 @@ import Image from 'next/image'
 
 const Home = async () => {
   const session = await getServerSession()
-  console.log(session?.user)
 
   return (
-    <div className='p-4 h-[calc(100vh-64px)]  md:h-[calc(100vh-9rem)] flex items-center justify-center'>
+    <div className='p-4 h-[calc(100vh-64px)]  md:h-[calc(100vh-9rem)] flex flex-col items-center justify-center gap-8'>
       <section className=' shadow-2xl dark:shadow-slate-900 rounded-md flex flex-col md:flex-row md:h-[70%] md:w-full lg:w-[60%] xl:w-1/2 gap-8 '>
         {/* Image Container */}
         <div className='relative h-1/3 w-full md:h-full md:w-1/2'>
@@ -30,6 +30,9 @@ const Home = async () => {
           </div>
         </div>
       </section>
+      {/* <div className='w-[100%] rounded-lg'>
+        <BottomBar />
+      </div> */}
     </div>
   )
 }

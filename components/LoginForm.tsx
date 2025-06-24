@@ -58,7 +58,7 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
-      callbackUrl: `/redirect`,
+      callbackUrl: `/admin`,
     })
 
     if (signInRes?.error) {
@@ -89,13 +89,13 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
-      callbackUrl: `/redirect`,
+      callbackUrl: `/admin`,
     })
 
     if (res?.error) {
       setError(res.error)
     } else {
-      router.push(res?.url || '/redirect')
+      router.push(res?.url || '/')
     }
   }
 

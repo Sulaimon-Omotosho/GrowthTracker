@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
-import BottomBar from '@/components/BottomBar'
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -27,7 +26,6 @@ export default function RootLayout({
         className={cn('min-h-screen font-sans antialiased', jakarta.className)}
       >
         {children}
-        <BottomBar />
       </body>
     </html>
   )

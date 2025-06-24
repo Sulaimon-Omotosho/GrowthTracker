@@ -7,7 +7,7 @@ import { signIn } from 'next-auth/react'
 
 const LoginGoogle = () => {
   const handleLogin = async () => {
-    await signIn('google', { callbackUrl: '/redirect' })
+    await signIn('google', { callbackUrl: '/admin' })
   }
 
   return (
