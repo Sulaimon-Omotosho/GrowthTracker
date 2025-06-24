@@ -6,18 +6,11 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 
 const RedirectPage = async () => {
-  const session = await getServerSession()
+  const session = await getServerSession(authOptions)
 
   if (!session) {
     redirect('/')
   }
-
-  // const role = session!.user!.role!.toLowerCase()
-  // if (session?.user) {
-  //   redirect(`/${role}`)
-  // }
-
-  console.log(session.user)
 
   return (
     <div className='flex h-screen justify-center items-center'>

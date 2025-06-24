@@ -8,6 +8,18 @@ const images = [
   '/images/HiccHaefLogo.png',
   '/images/HiccHsapLogo.png',
   '/images/HiccNLPLogo.png',
+  '/images/HiccChangingLives.jpeg',
+  '/images/HICC-logo.jpg',
+  '/images/HiccGrowthTrackLogo.jpg',
+  '/images/HiccHaefLogo.png',
+  '/images/HiccHsapLogo.png',
+  '/images/HiccNLPLogo.png',
+  '/images/HiccChangingLives.jpeg',
+  '/images/HICC-logo.jpg',
+  '/images/HiccGrowthTrackLogo.jpg',
+  '/images/HiccHaefLogo.png',
+  '/images/HiccHsapLogo.png',
+  '/images/HiccNLPLogo.png',
 ]
 
 const BottomBar = () => {
