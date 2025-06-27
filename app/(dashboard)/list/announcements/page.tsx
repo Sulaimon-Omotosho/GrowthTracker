@@ -1,12 +1,12 @@
+import Table from '@/components/dashboard/Table'
+import TableSearch from '@/components/dashboard/TableSearch'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
-import Table from '@/components/Table'
-import TableSearch from '@/components/TableSearch'
 import { announcementsData, role } from '@/constants'
 import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { ITEMS_PER_PAGE } from '@/lib/settings'
+import db from '@/prisma/db'
 import { SearchParamProps } from '@/types'
+import { ITEMS_PER_PAGE } from '@/utils/settings'
 import { Announcement, Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
@@ -64,8 +64,24 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
         <div className='flex items-center gap-2'>
           {role === 'admin' && (
             <>
-              <FormModal table='announcement' type='update' data={item.id} />
-              <FormModal table='announcement' type='delete' id={item.id} />
+              <FormModal
+                table='announcement'
+                type='update'
+                data={item.id}
+                districts={{
+                  name: '',
+                  id: '',
+                }}
+              />
+              <FormModal
+                table='announcement'
+                type='delete'
+                id={item.id}
+                districts={{
+                  name: '',
+                  id: '',
+                }}
+              />
             </>
           )}
         </div>
@@ -137,7 +153,7 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
               <FormModal
                 table='announcement'
                 type='create'
-                districts={districts ?? []}
+                districts={(districts as any) ?? []}
               />
             )}
           </div>
