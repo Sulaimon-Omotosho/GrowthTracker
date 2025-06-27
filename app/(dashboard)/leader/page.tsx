@@ -1,16 +1,15 @@
 import Announcement from '@/components/dashboard/Announcement'
 import { AttendanceChart } from '@/components/dashboard/AttendanceChart'
-import EventCalendar from '@/components/dashboard/EventCalendar'
 import { CountChart } from '@/components/dashboard/CountChart'
+import EventCalendar from '@/components/dashboard/EventCalendar'
 import { FollowUpChart } from '@/components/dashboard/FollowUpChart'
 import UserCard from '@/components/dashboard/UserCard'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import React from 'react'
 
-const AdminDashboard = async () => {
+const AdminDashboardPage = async () => {
   const session = await getServerSession(authOptions)
-  // console.log('User', session?.user)
 
   const countChartData = [
     { attribute: 'Zone1', desktop: 50, fill: '#C3EBFA' },
@@ -71,14 +70,13 @@ const AdminDashboard = async () => {
             <AttendanceChart />
           </div>
         </div>
-
         {/* BOTTOM CHARTS  */}
         <div className='w-full'>
           <FollowUpChart />
         </div>
       </div>
       {/* RIGHT SIDE  */}
-      <div className='w-full lg:w-1/3 flex flex-col gap-8 max-h-screen min-h-screen overflow-scroll remove-scrollbar pb-28'>
+      <div className='w-full lg:w-1/3 flex flex-col gap-8max-h-screen min-h-screen overflow-scroll remove-scrollbar pb-28'>
         <EventCalendar />
         <Announcement />
       </div>
@@ -86,4 +84,4 @@ const AdminDashboard = async () => {
   )
 }
 
-export default AdminDashboard
+export default AdminDashboardPage

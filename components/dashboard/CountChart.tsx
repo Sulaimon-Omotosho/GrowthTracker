@@ -151,10 +151,10 @@ export function CountChart({
               style={{ backgroundColor: item.fill }}
             ></div>
             <h1 className='font-bold'>{item.desktop}</h1>
-            <span className='text-xs'>
+            {/* <span className='text-xs'>
               ({((item.desktop / data.total) * 100).toFixed(1)}%)
             </span>
-            <h2 className='text-xs text-gray-500'>{item.attribute}</h2>
+            <h2 className='text-xs text-gray-500'>{item.attribute}</h2> */}
           </div>
         ))}
       </div>

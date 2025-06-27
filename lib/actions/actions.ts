@@ -1,5 +1,8 @@
 'use server'
 
+import db from '@/prisma/db'
+import { CurrentState, FormModalProps } from '@/types'
+
 // await prisma.post.create({
 //   data: {
 //     slug: 'cell-week-25-report',
@@ -69,3 +72,23 @@
 // if (post.scope === 'CELL') {
 //   const cell = await prisma.cell.findUnique({ where: { id: post.scopeId } })
 // }
+
+// USER ACTION
+export const deleteUser = async (currentState: any, data: FormData) => {
+  const id = data.get('id') as string
+
+  if (id) {
+    try {
+      await db.user.delete({
+        where: {
+          id,
+        },
+      })
+
+      return { success: true, error: false } as any
+    } catch (error) {
+      console.log(error)
+      return { success: false, error: true } as any
+    }
+  }
+}
