@@ -2,15 +2,15 @@ import Table from '@/components/dashboard/Table'
 import TableSearch from '@/components/dashboard/TableSearch'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
-import { announcementsData, role } from '@/constants'
-import { authOptions } from '@/lib/auth'
+import { role } from '@/constants'
+// import { authOptions } from '@/lib/auth'
 import db from '@/prisma/db'
-import { SearchParamProps } from '@/types'
+// import { SearchParamProps } from '@/types'
 import { ITEMS_PER_PAGE } from '@/utils/settings'
 import { Announcement, Prisma } from '@prisma/client'
-import { getServerSession } from 'next-auth'
+// import { getServerSession } from 'next-auth'
 import Image from 'next/image'
-import Link from 'next/link'
+// import Link from 'next/link'
 import React from 'react'
 
 const columns = [
@@ -37,9 +37,16 @@ const columns = [
   },
 ]
 
-const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
-  const searchQuery = searchParams?.get?.('search') ?? ''
-  const pageParam = searchParams?.get?.('page') ?? 1
+const AnnouncementList = async ({
+  searchParams,
+}: {
+  searchParams: {
+    search?: string
+    page?: string
+  }
+}) => {
+  const searchQuery = searchParams?.search ?? ''
+  const pageParam = searchParams?.page ?? 1
   const p = parseInt(pageParam as string)
   // const queryParams = { ...searchParams, page: undefined }
   const queryParams: Record<string, string> = {}
@@ -102,7 +109,7 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
     //     }
     //   }
     // }
-    query.title = { contains: searchQuery as string, mode: 'insensitive' }
+    query.title = { contains: searchQuery, mode: 'insensitive' }
   }
 
   const [data, count] = await db.$transaction([
