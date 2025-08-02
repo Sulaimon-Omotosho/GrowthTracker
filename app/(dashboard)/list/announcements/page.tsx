@@ -13,10 +13,6 @@ import Image from 'next/image'
 // import Link from 'next/link'
 import React from 'react'
 
-interface PageProps {
-  searchParams?: Record<string, string | string[]>
-}
-
 const columns = [
   {
     header: 'Title',

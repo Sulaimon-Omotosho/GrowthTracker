@@ -45,7 +45,7 @@ const columns = [
   },
 ]
 
-const CellLeadersList = async ({ searchParams }: SearchParamProps) => {
+const CellLeadersList = async ({ searchParams }: any) => {
   const session = await getServerSession(authOptions)
 
   const params = (await searchParams) || {}
