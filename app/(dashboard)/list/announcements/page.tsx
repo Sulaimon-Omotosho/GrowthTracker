@@ -37,10 +37,10 @@ const columns = [
   },
 ]
 
-const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
+const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
   const session = await getServerSession(authOptions)
 
-  const params = (await searchParams) || {}
+  // const params = (await searchParams) || {}
   const pageParam = params.page || 1
   const p = parseInt(pageParam as string)
   const queryParams = { ...params, page: undefined }
@@ -109,6 +109,7 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
     db.announcement.findMany({
       where: query,
       select: {
+        id: true,
         title: true,
         from: true,
         createdAt: true,
@@ -131,6 +132,8 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
     },
     orderBy: { name: 'asc' },
   })
+
+  console.log('Announcement:', data[0])
 
   return (
     <div className='bg-white dark:bg-black p-4 rounded-md flex-1 m-4 mt-0'>
