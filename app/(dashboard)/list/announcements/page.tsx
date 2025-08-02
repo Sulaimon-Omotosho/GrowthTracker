@@ -37,7 +37,14 @@ const columns = [
   },
 ]
 
-const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
+const AnnouncementList = async ({
+  searchParams,
+  params,
+}: {
+  searchParams?: Record<string, string | string[]>
+  params: Record<string, string>
+}) => {
+  // const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
   const session = await getServerSession(authOptions)
 
   // const params = (await searchParams) || {}

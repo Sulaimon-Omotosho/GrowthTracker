@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { type PageProps } from 'next'
 
 // declare type SearchParamProps = {
 //   params: { [key: string]: string }
@@ -6,10 +7,11 @@
 //   // searchParams: { [key: string]: string | string[] | undefined }
 // }
 
-export type SearchParamProps = {
-  params: Record<string, string>
-  searchParams?: Record<string, string | string[]>
-}
+export type SearchParamProps = PageProps
+// export type SearchParamProps = {
+//   params: Record<string, string>
+//   searchParams?: Record<string, string | string[]>
+// }
 
 declare type Gender = 'male' | 'female' | 'other'
 declare type Status = 'pending' | 'scheduled' | 'cancelled'
