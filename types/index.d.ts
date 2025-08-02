@@ -1,9 +1,13 @@
 /* eslint-disable no-unused-vars */
 
-declare type SearchParamProps = {
-  params: { [key: string]: string }
-  searchParams?: Record<string, string | string[] | undefined>
-  // searchParams: { [key: string]: string | string[] | undefined }
+// declare type SearchParamProps = {
+//   params: { [key: string]: string }
+//   searchParams?: Record<string, string | string[] | undefined>
+//   // searchParams: { [key: string]: string | string[] | undefined }
+// }
+
+export type SearchParamProps = {
+  searchParams?: Record<string, string | string[]>
 }
 
 declare type Gender = 'male' | 'female' | 'other'
