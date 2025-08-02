@@ -37,20 +37,19 @@ const columns = [
   },
 ]
 
-const AnnouncementList = async ({
-  searchParams = {},
-  params,
-}: SearchParamProps) => {
+const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
   // const session = await getServerSession(authOptions)
 
   // const params = (await searchParams) || {}
-  const pageParam = searchParams.page || 1
+  const searchQuery = searchParams?.get?.('search') ?? ''
+  const pageParam = searchParams?.get?.('page') || 1
   const p = parseInt(pageParam as string)
-  const queryParams = { ...searchParams, page: undefined }
+  // const queryParams = { ...searchParams, page: undefined }
+  const queryParams: Record<string, string> = {}
 
-  const searchQuery = Array.isArray(searchParams.search)
-    ? params.search[0]
-    : params.search || ''
+  // const searchQuery = Array.isArray(searchParams.search)
+  //   ? params.search[0]
+  //   : params.search || ''
 
   const renderRow = (item: Announcement) => (
     <tr
@@ -135,8 +134,6 @@ const AnnouncementList = async ({
     },
     orderBy: { name: 'asc' },
   })
-
-  console.log('Announcement:', data[0])
 
   return (
     <div className='bg-white dark:bg-black p-4 rounded-md flex-1 m-4 mt-0'>

@@ -7,11 +7,15 @@ import { type PageProps } from 'next'
 //   // searchParams: { [key: string]: string | string[] | undefined }
 // }
 
-// export type SearchParamProps = PageProps
 export type SearchParamProps = {
-  searchParams?: Record<string, string | string[] | undefined>
-  params: Record<string, string>
+  searchParams: URLSearchParams
+  params: { [key: string]: string }
 }
+
+// export type SearchParamProps = {
+//   searchParams?: Record<string, string | string[] | undefined>
+//   params: Record<string, string>
+// }
 
 declare type Gender = 'male' | 'female' | 'other'
 declare type Status = 'pending' | 'scheduled' | 'cancelled'
