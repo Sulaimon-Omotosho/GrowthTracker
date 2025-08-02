@@ -64,28 +64,28 @@ const AnnouncementForm = ({
     control,
   } = form
 
-  const [state, formAction] = useActionState(
-    type === 'create' ? createAnnouncement : updateAnnouncement,
-    {
-      success: false,
-      error: false,
-    }
-  )
+  // const [state, formAction] = useActionState(
+  //   type === 'create' ? createAnnouncement : updateAnnouncement,
+  //   {
+  //     success: false,
+  //     error: false,
+  //   }
+  // )
   const onSubmit = handleSubmit((data) => {
-    startTransition(() => {
-      formAction(data)
-    })
+    // startTransition(() => {
+    //   formAction(data)
+    // })
   })
 
-  useEffect(() => {
-    if (state.success) {
-      toast(
-        `Announcement has been ${type === 'create' ? 'created' : 'updated'}!`
-      )
-      setOpen(false)
-      router.refresh()
-    }
-  })
+  // useEffect(() => {
+  //   if (state.success) {
+  //     toast(
+  //       `Announcement has been ${type === 'create' ? 'created' : 'updated'}!`
+  //     )
+  //     setOpen(false)
+  //     router.refresh()
+  //   }
+  // })
 
   return (
     <Form {...form}>
