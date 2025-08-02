@@ -169,7 +169,7 @@ export const createUser = async (data: FormData) => {
 }
 
 // UPDATE USER
-export const updateUser = async (data: FormData, image: any) => {
+export const updateUser = async (data: FormData, image?: any) => {
   try {
     // Validate Data
     const validated = MemberFormValidation.parse(data)
