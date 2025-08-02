@@ -38,21 +38,17 @@ const columns = [
 ]
 
 const AnnouncementList = async ({
-  searchParams,
+  searchParams = {},
   params,
-}: {
-  searchParams?: Record<string, string | string[]>
-  params: Record<string, string>
-}) => {
-  // const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
-  const session = await getServerSession(authOptions)
+}: SearchParamProps) => {
+  // const session = await getServerSession(authOptions)
 
   // const params = (await searchParams) || {}
-  const pageParam = params.page || 1
+  const pageParam = searchParams.page || 1
   const p = parseInt(pageParam as string)
-  const queryParams = { ...params, page: undefined }
+  const queryParams = { ...searchParams, page: undefined }
 
-  const searchQuery = Array.isArray(params.search)
+  const searchQuery = Array.isArray(searchParams.search)
     ? params.search[0]
     : params.search || ''
 
