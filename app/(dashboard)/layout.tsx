@@ -16,7 +16,7 @@ interface LayoutProps {
   }
 }
 
-const DashboardLayout = ({ children, params }: LayoutProps) => {
+const DashboardLayout = ({ children }: LayoutProps) => {
   // }: Readonly<{ children: React.ReactNode; params: PageProps }>) => {
   return (
     <div className='max-h-screen min-h-screen remove-scrollbar flex'>
@@ -35,7 +35,8 @@ const DashboardLayout = ({ children, params }: LayoutProps) => {
           />
           <span className='hidden lg:block font-bold'>Growth Tracker</span>
         </Link>
-        <Sidebar params={params} />
+        <Sidebar />
+        {/* <Sidebar params={params} /> */}
       </div>
 
       {/* RIGHT  */}

@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { type PageProps } from 'next'
 
 // declare type SearchParamProps = {
 //   params: { [key: string]: string }
