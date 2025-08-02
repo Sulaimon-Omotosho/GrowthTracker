@@ -43,7 +43,7 @@ const columns = [
   },
 ]
 
-const WorkersList = async ({ searchParams }: SearchParamProps) => {
+const WorkersList = async ({ searchParams }: any) => {
   const params = (await searchParams) || {}
   const pageParam = params.page || 1
   const p = parseInt(pageParam as string)

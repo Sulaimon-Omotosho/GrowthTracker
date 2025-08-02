@@ -43,7 +43,7 @@ const columns = [
   },
 ]
 
-const ZonalLeadersList = async ({ searchParams }: SearchParamProps) => {
+const ZonalLeadersList = async ({ searchParams }: any) => {
   const session = await getServerSession(authOptions)
 
   const params = (await searchParams) || {}

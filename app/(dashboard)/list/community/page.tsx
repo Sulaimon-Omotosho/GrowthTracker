@@ -44,7 +44,7 @@ const columns = [
   },
 ]
 
-const CommunityLeadersList = async ({ searchParams }: SearchParamProps) => {
+const CommunityLeadersList = async ({ searchParams }: any) => {
   const session = await getServerSession(authOptions)
 
   const params = (await searchParams) || {}

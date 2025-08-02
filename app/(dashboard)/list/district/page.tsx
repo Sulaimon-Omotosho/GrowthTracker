@@ -43,7 +43,7 @@ const columns = [
   },
 ]
 
-const DistrictLeadersList = async ({ searchParams }: SearchParamProps) => {
+const DistrictLeadersList = async ({ searchParams }: any) => {
   const session = await getServerSession(authOptions)
 
   const params = (await searchParams) || {}

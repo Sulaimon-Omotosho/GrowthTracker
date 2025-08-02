@@ -42,7 +42,7 @@ const columns = [
   },
 ]
 
-const LeadersList = async ({ searchParams }: SearchParamProps) => {
+const LeadersList = async ({ searchParams }: any) => {
   const params = (await searchParams) || {}
   const pageParam = params.page || 1
   const p = parseInt(pageParam as string)

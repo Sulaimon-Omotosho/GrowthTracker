@@ -67,7 +67,7 @@ const columns = [
   },
 ]
 
-const MembersList = async ({ searchParams }: SearchParamProps) => {
+const MembersList = async ({ searchParams }: any) => {
   const session = await getServerSession(authOptions)
 
   const params = (await searchParams) || {}
