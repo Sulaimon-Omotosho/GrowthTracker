@@ -2,11 +2,17 @@ import BottomBar from '@/components/BottomBar'
 import LoginForm from '@/components/LoginForm'
 import LoginGoogle from '@/components/LoginGoogle'
 import LogoutButton from '@/components/LogoutButton'
+import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 
 const Home = async () => {
-  const session = await getServerSession()
+  const session = await getServerSession(authOptions)
+
+  if (session?.user.role) {
+    redirect(`/${session.user.role.toLowerCase()}`)
+  }
 
   return (
     <div className='p-4 h-[calc(100vh-64px)]  md:h-[calc(100vh-9rem)] flex flex-col items-center justify-center gap-8'>

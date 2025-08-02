@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UserFormValidation } from '@/lib/validation'
 import { getUserByEmail, signUpWithEmail } from '@/lib/actions/auth'
 import { signIn } from 'next-auth/react'
+import Link from 'next/link'
 
 const LoginForm = () => {
   const router = useRouter()
@@ -58,7 +59,7 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
-      callbackUrl: `/admin`,
+      callbackUrl: `/user`,
     })
 
     if (signInRes?.error) {
@@ -89,7 +90,7 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
-      callbackUrl: `/admin`,
+      callbackUrl: `/${role}`,
     })
 
     if (res?.error) {
@@ -156,17 +157,28 @@ const LoginForm = () => {
           ) : (
             <div className=''>
               <SubmitButton>Log In</SubmitButton>
-              <p className='text-sm pt-2'>
-                No Account?{' '}
-                <span
-                  onClick={() => {
-                    setSignUp(!signUp)
-                  }}
-                  className='underline text-blue-500 hover:text-blue-800 pl-2 cursor-pointer'
-                >
-                  Sign Up
-                </span>
-              </p>
+              <div className='flex justify-between'>
+                <p className='text-sm pt-2'>
+                  No Account?{' '}
+                  <span
+                    onClick={() => {
+                      setSignUp(!signUp)
+                    }}
+                    className='underline text-blue-500 hover:text-blue-800 pl-2 cursor-pointer'
+                  >
+                    Sign Up
+                  </span>
+                </p>
+                <p className='text-sm pt-2'>
+                  Forgotten{' '}
+                  <Link
+                    className='underline text-blue-500 hover:text-blue-800 cursor-pointer'
+                    href='/updatePassword'
+                  >
+                    Password
+                  </Link>
+                </p>
+              </div>
             </div>
           )}
         </form>

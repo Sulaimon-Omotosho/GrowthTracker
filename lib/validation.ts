@@ -23,7 +23,16 @@ export const LoginFormValidation = z.object({
 })
 
 export const MemberFormValidation = z.object({
+  id: z.string(),
   name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be at most 50 characters'),
+  firstName: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be at most 50 characters'),
+  lastName: z
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(50, 'Name must be at most 50 characters'),
@@ -39,6 +48,7 @@ export const MemberFormValidation = z.object({
   gender: z.enum(['male', 'female']),
   newConvert: z.enum(['yes', 'no', 'reborn']),
   maritalStatus: z.enum(['single', 'married', 'divorced', 'widowed']),
+  image: z.string(),
   address: z
     .string()
     .min(5, 'Address must be at least 5 characters')
@@ -66,6 +76,10 @@ export const MemberFormValidation = z.object({
     .refine((value) => value === true, {
       message: 'You must consent to privacy in order to proceed',
     }),
+  // password: z
+  //   .string()
+  //   .min(8, 'Password must be at least 8 characters')
+  //   .max(20, 'Password must be at most 20 characters'),
 })
 
 export const CreateAnnouncementSchema = z.object({

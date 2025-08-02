@@ -108,6 +108,13 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
   const [data, count] = await db.$transaction([
     db.announcement.findMany({
       where: query,
+      select: {
+        title: true,
+        from: true,
+        createdAt: true,
+        desc: true,
+        district: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -154,6 +161,7 @@ const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
                 table='announcement'
                 type='create'
                 districts={(districts as any) ?? []}
+                // key={districts.}
               />
             )}
           </div>

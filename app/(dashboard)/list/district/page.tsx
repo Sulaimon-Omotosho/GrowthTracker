@@ -1,10 +1,10 @@
+import Table from '@/components/dashboard/Table'
+import TableSearch from '@/components/dashboard/TableSearch'
 import Pagination from '@/components/Pagination'
-import Table from '@/components/Table'
-import TableSearch from '@/components/TableSearch'
 import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { ITEMS_PER_PAGE } from '@/lib/settings'
+import db from '@/prisma/db'
 import { DistrictTypes, SearchParamProps } from '@/types'
+import { ITEMS_PER_PAGE } from '@/utils/settings'
 import { Prisma } from '@prisma/client'
 import { UserIcon } from 'lucide-react'
 import { getServerSession } from 'next-auth'
@@ -90,6 +90,7 @@ const DistrictLeadersList = async ({ searchParams }: SearchParamProps) => {
             phone: true,
             image: true,
             gender: true,
+            id: true,
           },
         },
         communities: {
@@ -107,7 +108,6 @@ const DistrictLeadersList = async ({ searchParams }: SearchParamProps) => {
       where: query,
     }),
   ])
-  // console.log(data[0])
 
   const renderRow = (item: DistrictTypes) => (
     <tr
@@ -148,7 +148,7 @@ const DistrictLeadersList = async ({ searchParams }: SearchParamProps) => {
       <td className='hidden lg:table-cell'>{item.pastor.phone}</td>
       <td>
         <div className='flex items-center gap-2'>
-          <Link href={`/list/members/${item.pastorId}`}>
+          <Link href={`/list/members/${item.pastor.id}`}>
             <button className='flex items-center justify-center rounded-full bg-[#C3EBFA] cursor-pointer'>
               <Image src='/icons/view.png' width={16} height={16} alt='view' />
             </button>

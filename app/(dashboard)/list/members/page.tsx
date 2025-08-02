@@ -1,12 +1,12 @@
+import Table from '@/components/dashboard/Table'
+import TableSearch from '@/components/dashboard/TableSearch'
 import FormContainer from '@/components/FormContainer'
 import Pagination from '@/components/Pagination'
-import Table from '@/components/Table'
-import TableSearch from '@/components/TableSearch'
 import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { ITEMS_PER_PAGE } from '@/lib/settings'
+import db from '@/prisma/db'
 import { SearchParamProps } from '@/types'
-import { Prisma, User } from '@prisma/client'
+import { ITEMS_PER_PAGE } from '@/utils/settings'
+import { Cell, Department, Prisma, User } from '@prisma/client'
 import { UserIcon } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
@@ -80,6 +80,7 @@ const MembersList = async ({ searchParams }: SearchParamProps) => {
     : params.search || ''
 
   const renderRow = (item: UserWithRelations) => (
+    // const renderRow = (item: User, department: Department, cell: Cell) => (
     <tr
       key={item.id}
       className='border-b border-gray-200 even:bg-slate-50  hover:bg-[#F1F0FF] dark:hover:bg-[#CFCEFF]'
@@ -196,11 +197,14 @@ const MembersList = async ({ searchParams }: SearchParamProps) => {
                 height={14}
               />
             </button>
+            {session?.user.role === 'ADMIN' && (
+              <FormContainer table='user' type='create' />
+            )}
           </div>
         </div>
       </div>
       {/* LIST  */}
-      <Table columns={columns} renderRow={renderRow} data={data} />
+      <Table columns={columns} renderRow={renderRow as any} data={data} />
       <Pagination page={p} count={count} />
     </div>
   )

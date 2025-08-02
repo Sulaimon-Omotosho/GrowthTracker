@@ -39,13 +39,18 @@ const AnnouncementForm = dynamic(() => import('./forms/AnnouncementForm'), {
 const FormModal: React.FC<
   FormModalProps & { districts: { name: string; id: string } }
 > = ({ table, type, data, id, relatedData, districts }) => {
-  const size = type === 'create' ? 'w-8 h-8' : 'w-7 h-7'
+  const size = type === 'create' ? 'w-8 h-8' : 'w-8 h-8'
   const bgColor =
     type === 'create'
       ? 'bg-[#FAE27C]'
       : type === 'update'
-      ? 'bg-[#C3EBFA]'
+      ? 'bg-slate-500'
       : 'bg-[#CFCEFF]'
+  // type === 'create'
+  //   ? 'bg-[#FAE27C]'
+  //   : type === 'update'
+  //   ? 'bg-[#C3EBFA]'
+  //   : 'bg-[#CFCEFF]'
 
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -77,9 +82,10 @@ const FormModal: React.FC<
   }, [])
 
   const Form = () => {
+    const RenderedForm = forms[table]
     const [state, formAction] = useActionState(
       (state: any, formData: FormData) =>
-        deleteActionMap[table](state, formData),
+        (deleteActionMap as any)[table](state, formData),
       {
         success: false,
         error: false,
@@ -87,7 +93,7 @@ const FormModal: React.FC<
     )
 
     useEffect(() => {
-      if (state.success) {
+      if (state?.success) {
         toast.success(`Data has been deleted!`)
         setOpen(false)
         router.refresh()
@@ -111,7 +117,6 @@ const FormModal: React.FC<
       )
     }
 
-    const RenderedForm = forms[table]
     if (type === 'create' || type === 'update') {
       return RenderedForm ? (
         RenderedForm(type, data, setOpen, relatedData)
@@ -133,12 +138,12 @@ const FormModal: React.FC<
       </button>
 
       {open && (
-        <div className='w-screen h-screen absolute left-0 top-0 bg-black opacity-60 z-50 flex items-center justify-center'>
+        <div className='w-screen max-h-screen min-h-screen remove-scrollbar overflow-y-hidden absolute left-0 top-0 bg-black z-50 flex items-center justify-center'>
           <div className='bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]'>
             <Form />
             <div
               onClick={() => setOpen(false)}
-              className='absolute top-4 right-4 cursor-pointer'
+              className='absolute top-10 right-4 cursor-pointer'
             >
               <Image
                 src='/icons/close.png'

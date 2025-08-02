@@ -166,7 +166,7 @@ export const menuItems = [
       {
         icon: '/icons/announcement.png',
         label: 'Announcements',
-        href: 'list/announcements',
+        href: '/list/announcements',
         visible: [
           'ADMIN',
           'LEADER',
@@ -185,7 +185,7 @@ export const menuItems = [
       {
         icon: '/icons/profile.png',
         label: 'Profile',
-        href: '/profile',
+        href: '/list/profile',
         visible: [
           'ADMIN',
           'LEADER',

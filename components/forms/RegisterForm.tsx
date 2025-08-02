@@ -1,9 +1,9 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Form, FormControl } from '@/components/ui/form'
+import { FormControl } from '@/components/ui/form'
 import CustomFormField from '../CustomFormField'
 import SubmitButton from '../SubmitButton'
 import { useState } from 'react'
@@ -17,20 +17,27 @@ import Image from 'next/image'
 // import FileUploader from '../FileUploader'
 import { FormFieldType } from './LoginInForm'
 import { Session } from 'next-auth'
+import { updateUser } from '@/lib/actions/actions'
+import { toast } from 'react-toastify'
 
 interface RegisterFormProps {
   userId: string
   session: Session | null
 }
 
-const RegisterForm = ({ userId, session }: RegisterFormProps) => {
+type Inputs = z.infer<typeof MemberFormValidation>
+
+const RegisterForm = ({ session }: RegisterFormProps) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof MemberFormValidation>>({
-    // resolver: zodResolver(MemberFormValidation),
+  const form = useForm<Inputs>({
+    resolver: zodResolver(MemberFormValidation) as any,
     defaultValues: {
+      id: session?.user.id || '',
       name: '',
+      firstName: '',
+      lastName: '',
       email: session?.user?.email || '',
       phone: '',
       maritalStatus: 'single',
@@ -47,52 +54,27 @@ const RegisterForm = ({ userId, session }: RegisterFormProps) => {
     },
   })
 
-  const handleSubmit = async (data: z.infer<typeof MemberFormValidation>) => {
-    setIsLoading(true)
+  const onSubmit = form.handleSubmit(async (data) => {
+    // console.log('User Data:', data)
+    const result = await updateUser(data as any)
 
-    try {
-      if (!userId) {
-        throw new Error('User ID is undefined')
+    if (!result.success) {
+      if (result.error === 'Email already exists') {
+        toast('This email is already registered.')
+      } else if (result.error === 'Phone number already exists') {
+        toast('This phone number is already registered.')
+      } else {
+        toast('Something went wrong. Please try again.')
       }
-
-      const birthDate = new Date(data.birthDate)
-      if (isNaN(birthDate.getTime())) {
-        throw new Error('Invalid date format for dob')
-      }
-
-      const result = await fetch(`/api/user/update?id=${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          birthDate: birthDate.toISOString(),
-        }),
-      })
-
-      if (!result.ok) {
-        const errorData = await result.json()
-        throw new Error(errorData.error || 'Failed to update user')
-      }
-
-      console.log('User updated successfully:', result)
-      router.push(`/member/${userId}/admin`)
-    } catch (error) {
-      console.error('Error updating user:', error)
-    } finally {
-      setIsLoading(false)
+    } else {
+      toast('Profile Updated!')
+      router.push('/')
     }
-  }
+  })
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(async (data) => {
-          await handleSubmit(data)
-        })}
-        className='space-y-12 flex-1'
-      >
+    <FormProvider {...form}>
+      <form onSubmit={onSubmit} className='space-y-12 flex-1'>
         <section className='space-y-4'>
           <h1 className='text-3xl font-bold md:text-4xl'>Welcome 👋</h1>
           <p className='text-gray-500'>Let us know more about you.</p>
@@ -115,6 +97,27 @@ const RegisterForm = ({ userId, session }: RegisterFormProps) => {
             iconAlt='user'
           />
 
+          <div className='flex flex-col gap-6 xl:flex-row'>
+            <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name='firstName'
+              label='First Name'
+              placeholder='First Name'
+              iconSrc='/icons/user.svg'
+              iconAlt='user'
+            />
+
+            <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name='lastName'
+              label='Last Name'
+              placeholder='Last Name'
+              iconSrc='/icons/user.svg'
+              iconAlt='user'
+            />
+          </div>
           <div className='flex flex-col gap-6 xl:flex-row'>
             <CustomFormField
               fieldType={FormFieldType.INPUT}
@@ -312,7 +315,7 @@ const RegisterForm = ({ userId, session }: RegisterFormProps) => {
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
-    </Form>
+    </FormProvider>
   )
 }
 

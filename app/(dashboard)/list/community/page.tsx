@@ -1,11 +1,11 @@
+import Table from '@/components/dashboard/Table'
+import TableSearch from '@/components/dashboard/TableSearch'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
-import Table from '@/components/Table'
-import TableSearch from '@/components/TableSearch'
 import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { ITEMS_PER_PAGE } from '@/lib/settings'
+import db from '@/prisma/db'
 import { CommunityTypes, SearchParamProps } from '@/types'
+import { ITEMS_PER_PAGE } from '@/utils/settings'
 import { Prisma, User } from '@prisma/client'
 import { UserIcon } from 'lucide-react'
 import { getServerSession } from 'next-auth'
@@ -95,6 +95,7 @@ const CommunityLeadersList = async ({ searchParams }: SearchParamProps) => {
             phone: true,
             image: true,
             gender: true,
+            id: true,
           },
         },
         district: { select: { name: true } },

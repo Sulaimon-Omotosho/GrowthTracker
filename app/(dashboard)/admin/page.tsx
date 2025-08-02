@@ -7,10 +7,23 @@ import UserCard from '@/components/dashboard/UserCard'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import React from 'react'
+import SmallUserCard from '@/components/dashboard/SmallUserCard'
+import {
+  getLeaderCountsByRole,
+  getLeadersCount,
+  getUsersCount,
+  getWorkersCount,
+} from '@/lib/actions/data'
 
 const AdminDashboard = async () => {
   const session = await getServerSession(authOptions)
   // console.log('User', session?.user)
+
+  const membersCount = await getUsersCount()
+  const leadersCount = await getLeadersCount()
+  // const leadersByRole = await getLeaderCountsByRole()
+  const workersCount = await getWorkersCount()
+  // console.log('Workers count:', workersCount)
 
   const countChartData = [
     { attribute: 'Zone1', desktop: 50, fill: '#C3EBFA' },
@@ -51,10 +64,18 @@ const AdminDashboard = async () => {
       {/* LEFT SIDE  */}
       <div className='w-full lg:w-2/3 flex flex-col gap-8 max-h-[calc(100vh-64px)] min-h-[calc(100vh-64px)] overflow-scroll remove-scrollbar pb-8'>
         {/* USER CARD  */}
-        <div className='flex gap-4 justify-between flex-wrap'>
-          <UserCard type='member' figure={'2,950'} />
-          <UserCard type='worker' figure={'1,045'} />
-          <UserCard type='leader' figure={'505'} />
+        <div className=' bg-clip-content border-4 p-3 rounded-xl flex flex-col gap-4'>
+          <div className='flex flex-col lg:flex-row gap-4 justify-between flex-wrap'>
+            <UserCard type='members' figure={membersCount.count as any} />
+            <UserCard type='workers' figure={workersCount.count as any} />
+            <UserCard type='leaders' figure={leadersCount.count as any} />
+          </div>
+          <div className='flex gap-4 justify-between flex-wrap'>
+            <SmallUserCard type='departments' figure='48' />
+            <SmallUserCard type='districts' figure='10' />
+            <SmallUserCard type='communities' figure='60' />
+            <SmallUserCard type='cells' figure='680' />
+          </div>
         </div>
         {/* MIDDLE CHARTS  */}
         <div className='flex gap-4 flex-col lg:flex-row'>

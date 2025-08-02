@@ -68,7 +68,7 @@ export const loginWithEmail = async (formData: FormData) => {
     email,
     password,
     role: existingUser.role,
-    redirectTo: '/admin',
+    redirectTo: '/',
   }
 
   try {
@@ -84,19 +84,15 @@ export const loginWithEmail = async (formData: FormData) => {
     }
     throw error
   }
-  revalidatePath('/admin')
+  revalidatePath('/')
 }
 
 // UPDATE PASSWORD
 export async function updatePassword(formData: FormData) {
-  // console.log('Data', formData)
-
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
   const hash = await saltAndHashPassword(password as any)
-  // console.log('Email', email)
-  // console.log('Hash', hash)
 
   try {
     await db.user.update({

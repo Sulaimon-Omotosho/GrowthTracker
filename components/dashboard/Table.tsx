@@ -1,4 +1,4 @@
-import { columns } from '@/types'
+import { Columns } from '@/types'
 import React from 'react'
 
 const Table = ({
@@ -6,7 +6,7 @@ const Table = ({
   renderRow,
   data,
 }: {
-  columns: columns[]
+  columns: Columns[]
   renderRow: (item: any) => React.ReactNode
   data: any[]
 }) => {

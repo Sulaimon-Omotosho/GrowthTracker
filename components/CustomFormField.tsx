@@ -14,8 +14,8 @@ import Image from 'next/image'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { E164Number } from 'libphonenumber-js/core'
-// import DatePicker from 'react-datepicker'
-// import 'react-datepicker/dist/react-datepicker.css'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import {
   Select,
   SelectContent,
@@ -146,15 +146,16 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             className='ml-2'
           />
           <FormControl>
-            {/* <DatePicker
+            <DatePicker
               selected={field.value}
               onChange={(date) => field.onChange(date)}
               dateFormat={dateFormat ?? 'MM/dd/yyyy'}
               showTimeSelect={showTimeSelect ?? false}
               timeInputLabel='Time:'
-              wrapperClassName='overflow-hidden border-transparent w-full placeholder:text-white  h-11 text-14-medium rounded-md px-3 outline-none'
-            /> */}
-            <Calendar24 />
+              // wrapperClassName='overflow-hidden border-transparent w-full placeholder:text-white  h-11 text-14-medium rounded-md flex align-center px-3 outline-none'
+              className='w-full h-11 outline-none px-3'
+            />
+            {/* <Calendar24 /> */}
           </FormControl>
         </div>
       )
@@ -189,7 +190,11 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.SELECT:
       return (
         <FormControl>
-          <Select onValueChange={field.change} defaultValue={field.value}>
+          <Select
+            onValueChange={(val) => field.onChange(val === 'true')}
+            defaultValue={String(field.value)}
+          >
+            {/* <Select onValueChange={field.onChange} defaultValue={field.value}> */}
             <FormControl>
               <SelectTrigger className='bg-black  placeholder:text-white border-black h-11 focus:ring-0 focus:ring-offset-0 text-white'>
                 <SelectValue
@@ -200,7 +205,10 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             </FormControl>
             <SelectContent className='bg-black text-white border-black'>
               {props.options?.map((option: { value: any; label: any }) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={String(option.value)}
+                  value={String(option.value)}
+                >
                   {option.label}
                 </SelectItem>
               ))}
@@ -227,7 +235,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               id={props.name}
               checked={field.value}
               onCheckedChange={field.onChange}
-              className='border-black'
+              className='border-slate-500'
             />
             <label
               htmlFor={props.name}

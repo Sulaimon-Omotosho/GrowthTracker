@@ -1,20 +1,12 @@
+import Table from '@/components/dashboard/Table'
+import TableSearch from '@/components/dashboard/TableSearch'
 import FormModal from '@/components/FormModal'
 import Pagination from '@/components/Pagination'
-import Table from '@/components/Table'
-import TableSearch from '@/components/TableSearch'
 import { eventsData, role } from '@/constants'
+import { Event } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-
-type Event = {
-  id: number
-  title: string
-  class: string
-  date: string
-  startTime: string
-  endTime: string
-}
 
 const columns = [
   {
@@ -61,8 +53,24 @@ const EventsList = () => {
         <div className='flex items-center gap-2'>
           {role === 'admin' && (
             <>
-              <FormModal table='event' type='update' data={item} />
-              <FormModal table='event' type='delete' id={item.id} />
+              <FormModal
+                table='event'
+                type='update'
+                data={item}
+                districts={{
+                  name: '',
+                  id: '',
+                }}
+              />
+              <FormModal
+                table='event'
+                type='delete'
+                id={item.id}
+                districts={{
+                  name: '',
+                  id: '',
+                }}
+              />
             </>
           )}
         </div>
@@ -94,14 +102,23 @@ const EventsList = () => {
                 height={14}
               />
             </button>
-            {role === 'admin' && <FormModal table='event' type='create' />}
+            {role === 'admin' && (
+              <FormModal
+                table='event'
+                type='create'
+                districts={{
+                  name: '',
+                  id: '',
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
       {/* LIST  */}
       <Table columns={columns} renderRow={renderRow} data={eventsData} />
       {/* PAGINATION  */}
-      <Pagination />
+      <Pagination page={0} count={0} />
     </div>
   )
 }

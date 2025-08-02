@@ -11,9 +11,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
-const SingleMemberPage = async ({ params }: { params: any }) => {
-  const id = (await params.id) as String
+const ProfilePage = async ({ params }: { params: any }) => {
   const session = await getServerSession(authOptions)
+  const id = session?.user.id
 
   const user = await db.user.findUnique({
     where: { id } as any,
@@ -50,7 +50,7 @@ const SingleMemberPage = async ({ params }: { params: any }) => {
               <div className='w-1/3'>
                 <Image
                   src={user.image}
-                  alt='User'
+                  alt='teacher'
                   width={144}
                   height={144}
                   className='w-36 h-36 rounded-full object-cover'
@@ -60,11 +60,9 @@ const SingleMemberPage = async ({ params }: { params: any }) => {
               <UserIcon className='w-36 h-36 p-5 bg-[#C3EBFA] rounded-full ring-1 ring-gray-300 shadow-md text-gray-500' />
             )}
             <div className='w-2/3 flex flex-col justify-between gap-4'>
-              <div className='flex items-center gap-4'>
+              <div className='flex items-center justify-between gap-4'>
                 <h1 className='text-xl font-semibold'>{user.name}</h1>
-                {session?.user.role === 'ADMIN' && (
-                  <FormContainer table='user' type='update' data={user} />
-                )}
+                <FormContainer table='user' type='update' data={user} />
               </div>
               <p className='text-sm text-gray-800'>{user.notes}</p>
               <div className='flex items-center justify-between gap-2 flex-col text-xs font-medium'>
@@ -230,4 +228,4 @@ const SingleMemberPage = async ({ params }: { params: any }) => {
   )
 }
 
-export default SingleMemberPage
+export default ProfilePage

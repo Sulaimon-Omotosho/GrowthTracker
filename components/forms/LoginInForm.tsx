@@ -51,7 +51,7 @@ const LoginInForm = () => {
       return
     }
 
-    const userId = res?.user?.id
+    // const userId = res?.user?.id
 
     const signInRes = await signIn('credentials', {
       redirect: false,
@@ -63,7 +63,8 @@ const LoginInForm = () => {
     if (signInRes?.error) {
       setError(signInRes.error)
     } else {
-      router.push(signInRes?.url || '/')
+      router.push('/register')
+      // router.push(signInRes?.url || '/register')
     }
   }
 
