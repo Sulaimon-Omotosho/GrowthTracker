@@ -37,12 +37,9 @@ const columns = [
   },
 ]
 
-const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
-  // const session = await getServerSession(authOptions)
-
-  // const params = (await searchParams) || {}
+const AnnouncementList = async ({ searchParams }: SearchParamProps) => {
   const searchQuery = searchParams?.get?.('search') ?? ''
-  const pageParam = searchParams?.get?.('page') || 1
+  const pageParam = searchParams?.get?.('page') ?? 1
   const p = parseInt(pageParam as string)
   // const queryParams = { ...searchParams, page: undefined }
   const queryParams: Record<string, string> = {}
@@ -51,7 +48,7 @@ const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
   //   ? params.search[0]
   //   : params.search || ''
 
-  const renderRow = (item: Announcement) => (
+  const renderRow = (item: any) => (
     <tr
       key={item.id}
       className='border-b border-gray-200 even:bg-slate-50 dark:even:bg-slate-600 hover:bg-[#F1F0FF]'
@@ -93,18 +90,19 @@ const AnnouncementList = async ({ searchParams, params }: SearchParamProps) => {
 
   const query: Prisma.AnnouncementWhereInput = {}
 
-  if (queryParams) {
-    for (const [key, value] of Object.entries(queryParams)) {
-      if (value !== undefined) {
-        switch (key) {
-          case 'search':
-            query.title = { contains: value, mode: 'insensitive' }
-            break
-          default:
-            break
-        }
-      }
-    }
+  if (searchQuery) {
+    // for (const [key, value] of Object.entries(queryParams)) {
+    //   if (value !== undefined) {
+    //     switch (key) {
+    //       case 'search':
+    //         query.title = { contains: value, mode: 'insensitive' }
+    //         break
+    //       default:
+    //         break
+    //     }
+    //   }
+    // }
+    query.title = { contains: searchQuery as string, mode: 'insensitive' }
   }
 
   const [data, count] = await db.$transaction([
