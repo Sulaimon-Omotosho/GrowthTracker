@@ -4,16 +4,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-interface PageProps {
+// interface PageProps {
+//   params: {
+//     pageName: string
+//   }
+// }
+interface LayoutProps {
+  children: React.ReactNode
   params: {
     pageName: string
   }
 }
 
-const DashboardLayout = ({
-  children,
-  params,
-}: Readonly<{ children: React.ReactNode; params: PageProps }>) => {
+const DashboardLayout = ({ children, params }: LayoutProps) => {
+  // }: Readonly<{ children: React.ReactNode; params: PageProps }>) => {
   return (
     <div className='max-h-screen min-h-screen remove-scrollbar flex'>
       {/* LEFT  */}
@@ -31,7 +35,7 @@ const DashboardLayout = ({
           />
           <span className='hidden lg:block font-bold'>Growth Tracker</span>
         </Link>
-        <Sidebar params={params as any} />
+        <Sidebar params={params} />
       </div>
 
       {/* RIGHT  */}
