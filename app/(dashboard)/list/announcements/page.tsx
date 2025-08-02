@@ -13,6 +13,10 @@ import Image from 'next/image'
 // import Link from 'next/link'
 import React from 'react'
 
+interface PageProps {
+  searchParams?: Record<string, string | string[]>
+}
+
 const columns = [
   {
     header: 'Title',
@@ -38,10 +42,12 @@ const columns = [
 ]
 
 const AnnouncementList = async ({
+  //   searchParams,
+  // }: {
+  //   searchParams: { [key: string]: string | undefined }
+  // }) => {
   searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined }
-}) => {
+}: any) => {
   // const AnnouncementList = async ({
   //   searchParams,
   // }: {
@@ -125,7 +131,7 @@ const AnnouncementList = async ({
       if (value !== undefined) {
         switch (key) {
           case 'search':
-            query.title = { contains: value, mode: 'insensitive' }
+            query.title = { contains: value as any, mode: 'insensitive' }
             break
           default:
             break
