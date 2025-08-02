@@ -60,7 +60,7 @@ const AnnouncementList = async ({
   //   ? params.search[0]
   //   : params.search || ''
 
-  const { page, ...queryParams } = searchParams
+  const { page, ...queryParams } = await searchParams
   const p = page ? parseInt(page) : 1
 
   const renderRow = (item: any) => (
